@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use ExampleClass;
 use Illuminate\Http\Request;
 use Webfox\Xero\OauthCredentialManager;
 
 class XeroController extends Controller
 {
+    protected $xeroTenantId = null;
+    protected $apiInstance = null;
+
+
     public function index(Request $request, OauthCredentialManager $xeroCredentials)
     {
         try {
@@ -21,6 +26,8 @@ class XeroController extends Controller
                 $organisationName = $xero->getOrganisations($xeroCredentials->getTenantId())->getOrganisations()[0]->getName();
                 $user             = $xeroCredentials->getUser();
                 $username         = "{$user['given_name']} {$user['family_name']} ({$user['username']})";
+                $this->xeroTenantId = $xeroCredentials->getTenantId();
+                $this->apiInstance = $xero;
             }
         } catch (\throwable $e) {
             // This can happen if the credentials have been revoked or there is an error with the organisation (e.g. it's expired)
@@ -33,5 +40,13 @@ class XeroController extends Controller
             'organisationName' => $organisationName ?? null,
             'username'         => $username ?? null
         ]);
+    }
+
+    public function getContact($xeroTenantId, $apiInstance, $returnObj = false)
+    {
+        $example = new ExampleClass();
+        $contact = $example->getContact($this->xeroTenantId, $this->apiInstance, true);
+
+        return $contact;
     }
 }

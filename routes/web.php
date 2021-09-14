@@ -17,3 +17,4 @@ Route::get('/', function () {
     return view('welcome');
 });
 Route::get('/manage/xero', [\App\Http\Controllers\XeroController::class, 'index'])->name('xero.auth.success');
+Route::get('/get-contacts', [\App\Http\Controllers\XeroController::class, 'getContact'])->name('xero.getcontacts');
